@@ -5,14 +5,54 @@
  */
 
 namespace Controllers;
+
 import('core.types');
 import('core.controller');
 import('core.template');
 import('core.utils.mobile');
 import('core.exceptions');
+import('core.session.handler');
+import('core.backend');
+import('core.storage');
+import('core.auth');
 import('plugins.articles.article');
 
 class Page extends \Core\Controller {
+    protected $_backend;
+    protected $_session;
+    protected $_template;
+    protected $_user;
+    protected $_auth;
+
+    public function __construct($args=False) {
+        parent::__construct($args);
+        $this->_init_session();
+        $this->_init_template();
+        $this->_init_auth();
+        try {
+            $this->_template->logged_in = True;
+        } catch(\Core\AuthNotLoggedInError $e){
+            $this->_template->logged_in = False;
+        }
+    }
+
+    protected function _init_auth() {
+        $this->_auth = \Core\Auth::container()
+            ->get_auth('user', $this->_session);
+    }
+
+    protected function _init_template() {
+        $t = \Core\Template::create();
+        $t->_jsapps = array();
+        $this->_template = $t;
+    }
+
+
+    protected function _init_session() {
+        $this->_session = \Core\Session\Handler::container()
+            ->get_hs_session();
+    }
+
     public function index() {
         $this->_init();
         $t = $this->_template;
@@ -43,7 +83,8 @@ class Page extends \Core\Controller {
                 ->get_article($this->_args['article_id']);
             $t->article_id = $this->_args['article_id'];
             $t->content = $t->render('news_article.php');
-            $t->title = $article->title;
+            $t->title = $t->article->title;
+            $t->canonical = $t->article->id . '/' . $t->article->seo_title . ".html";
             echo $t->render('main.php');            
         } catch (\Plugins\Articles\ArticleNotFoundError $e) {
             throw new \Core\HTTPError(404, "Article #{$this->_args[article_id]}");

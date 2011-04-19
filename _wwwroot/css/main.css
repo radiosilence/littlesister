@@ -1,0 +1,16 @@
+body {
+}
+header h1 a {
+    font-family: PTSans;
+    font-weight: bold;
+    text-indent: -999999px;
+    background-image: url('/img/banner.png');
+    display: block;
+    width: 640px;
+    height: 75px;
+}
+
+div.fieldset textarea#body {
+    width: 38em;
+    height: 50em;
+}
