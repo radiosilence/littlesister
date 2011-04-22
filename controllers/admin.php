@@ -42,12 +42,37 @@ class Admin extends \Controllers\Page {
     }
     public function edit_article() {
         $t = $this->_template;
-        $t->admin_content = $this->_edit_article($this->_session->get_tok(), $this->_args['article_id']);
+        $t->admin_content = $this->_edit_article(
+            $this->_session->get_tok(),
+            $this->_auth->user_id(),
+            $this->_args['article_id']
+        );
         $t->content = $t->render('admin_home.php');
         echo $t->render('main.php');
     }
 
-    protected function _edit_article($tok, $id=False) {
+    public function delete_article() {
+        $t = $this->_template;
+        $article = \Plugins\Articles\Article::container()
+            ->get_by_id($this->_args['article_id']);
+
+        $at = \Plugins\Articles\Plugin::get_template('admin/delete.php');
+        $at->article = $article;
+        $at->admin_url = "/admin";
+        if($_POST['confirm'] == '1') {
+            $at->_confirmed = True;
+            \Core\Storage::container()
+                ->get_storage('Article')
+                ->delete($article);
+        } else {
+            $at->_confirmed = False;
+        }
+
+        $t->content = $at->render();
+        echo $t->render('main.php');
+    }
+
+    protected function _edit_article($tok, $author, $id=False) {
         $t = \Plugins\Articles\Plugin::get_template('admin/edit.php');
         $t->admin_url = "/admin";
         $t->tok = $tok;
@@ -67,6 +92,11 @@ class Admin extends \Controllers\Page {
                 $article->form_values();
                 $validator = \Core\Validator::validator('\Plugins\Articles\Article');
                 $validator->validate($_POST, \Plugins\Articles\Article::validation());
+                
+                if($t->new) {
+                    $article->author = $author;
+                }
+
                 \Core\Storage::container()
                     ->get_storage('Article')
                     ->save($article);
@@ -101,5 +131,11 @@ class Admin extends \Controllers\Page {
         }
         echo $t->render('main.php');
     }
+
+    public function logout() {
+        $this->_auth->logout();
+        header('Location: /admin/login');
+    }
+
 
 }

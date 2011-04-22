@@ -7,6 +7,8 @@
   <script src="/js_lib/jquery.js" type="text/javascript"></script>
   <script src="/js_lib/jquery-lightbox.js" type="text/javascript"></script>
   <script src="/js_lib/jquery-ui.js" type="text/javascript"></script>
+  <script src="/js_lib/jquery-markitup.js" type="text/javascript"></script>
+  <script src="/js_lib/markitup/sets/markdown/set.js" type="text/javascript"></script>
   <script src="/js_lib/common.js" type="text/javascript"></script>
   <link rel="canonical" href="http://littlesister.0xf.nl/<?=$canonical?>" />
   <meta name="Description" content="<?=($title ? "{$title} &ndash; Little Sister Writes" : 'Little Sister Writes.')?>">
