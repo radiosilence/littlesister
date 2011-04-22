@@ -26,16 +26,20 @@ class Admin extends \Controllers\Page {
                 exit();
             }
         }
+        $jsapps = $t->_jsapps;
+        array_push($jsapps, '/js/admin.js');
+        $t->_jsapps = $jsapps;
+
     }
     public function index() {
         $t = $this->_template;
         $at = \Plugins\Articles\Plugin::get_template('admin/list.php');
         $at->admin_url = '/admin';
-        $at->posts = \Plugins\Articles\Article::mapper()
+        $at->articles = \Plugins\Articles\Article::mapper()
             ->attach_storage(\Core\Storage::container()
                 ->get_storage('Article')
             )
-            ->get_latest_articles();
+            ->get_latest_articles(True);
         $t->admin_content = $at->render();
         $t->content = $t->render('admin_home.php');
         echo $t->render('main.php');
@@ -69,6 +73,26 @@ class Admin extends \Controllers\Page {
         }
 
         $t->content = $at->render();
+        echo $t->render('main.php');
+    }
+
+    public function set_article_active() {
+        $t = $this->_template;
+        $article = \Plugins\Articles\Article::container()
+            ->get_by_id($_POST['article_id']);
+        
+        $article->active = $_POST['active'] == "true" ? 1 : 0;
+        $msg = sprintf("Article %s set as %s.",
+            $article['id'],
+            ($article->active ? 'active' : 'inactive')
+        );
+        \Core\Storage::container()
+            ->get_storage('Article')
+            ->save($article);
+
+        $t->set_file('message.php');
+        $t->content = $this->_return_message("Success",
+            $msg);
         echo $t->render('main.php');
     }
 

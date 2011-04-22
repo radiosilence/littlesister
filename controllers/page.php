@@ -22,6 +22,7 @@ class Page extends \Core\Controller {
     protected $_session;
     protected $_template;
     protected $_user;
+    protected $_async;
     protected $_auth;
 
     public function __construct($args=False) {

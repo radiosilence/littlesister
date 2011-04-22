@@ -5,11 +5,15 @@
   <link rel="stylesheet" href="/css_lib/subverse.css" type="text/css"/> 
   <link rel="stylesheet" href="/css/main.css" type="text/css"/> 
   <script src="/js_lib/jquery.js" type="text/javascript"></script>
+  <script src="/js_lib/jquery.cookie.js" type="text/javascript"></script>
   <script src="/js_lib/jquery-lightbox.js" type="text/javascript"></script>
   <script src="/js_lib/jquery-ui.js" type="text/javascript"></script>
   <script src="/js_lib/jquery-markitup.js" type="text/javascript"></script>
   <script src="/js_lib/markitup/sets/markdown/set.js" type="text/javascript"></script>
   <script src="/js_lib/common.js" type="text/javascript"></script>
+  <?php foreach($_jsapps as $app): ?>
+  <script src="<?=$app?>" type="text/javascript"></script>
+  <?php endforeach; ?>
   <link rel="canonical" href="http://littlesister.0xf.nl/<?=$canonical?>" />
   <meta name="Description" content="<?=($title ? "{$title} &ndash; Little Sister Writes" : 'Little Sister Writes.')?>">
 </head>
@@ -55,4 +59,5 @@
     </footer>
     <?php endif;?>
 </div>
+  <div id="dialog" title=""></div> 
 </body>

@@ -4,6 +4,7 @@ $routes = array(
     '^([0-9]+)(.*)$' => 'Page:method=display_article;article_id=$1',
     '^admin/login' => 'Admin:method=login',
     '^admin/logout' => 'Admin:method=logout',
+    '^admin/set-article-active' => 'Admin:method=set_article_active',
     '^admin/edit-article/?(.*)$' => 'Admin:method=edit_article;article_id=$1',
     '^admin/delete-article/(.*)$' => 'Admin:method=delete_article;article_id=$1',
     '^admin/new-article$' => 'Admin:method=edit_article',
