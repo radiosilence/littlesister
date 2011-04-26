@@ -152,6 +152,7 @@ class Admin extends \Controllers\Page {
                     $this->_auth->attempt($_POST['username'], $_POST['password']); 
                     $t->content = $this->_return_message("Success",
                         "Logged in.");       
+                    header('Location: /admin');
                 } catch(\Core\AuthAttemptError $e) {
                     $t->content = $this->_return_message("Fail",
                         "Invalid username or password.");
