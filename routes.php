@@ -9,6 +9,6 @@ $routes = array(
     '^admin/delete-article/(.*)$' => 'Admin:method=delete_article;article_id=$1',
     '^admin/new-article$' => 'Admin:method=edit_article',
     '^admin' => 'Admin',
-    '^(.*?)$' => 'Page:method=index'
+    '^$' => 'Page:method=index'
 );
 
