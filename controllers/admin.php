@@ -138,22 +138,29 @@ class Admin extends \Controllers\Page {
     }
 
     public function login() {
-        $t = $this->_template;
-        $t->user_field = "User";
-        $t->login_action = '/admin/login';
-        $t->set_file('login_page.php');
-        if(isset($_POST['username'])) {
-            try {
-                $this->_auth->attempt($_POST['username'], $_POST['password']);        
-                header('Location: /admin');
-            } catch(\Core\AuthAttemptError $e) {
-                $t->content = $this->_return_message("Fail",
-                    "Invalid username or password.");
-            }            
-        } else {
-            $t->content = $t->render();
+        try {
+            $this->_auth->user_id();
+            header('Location: /admin');
+        } catch(\Core\AuthNotLoggedInError $e) {
+            $t = $this->_template;
+            $t->user_field = "User";
+            $t->login_action = '/admin/login';
+            $t->set_file('login_page.php');
+                
+            if(isset($_POST['username'])) {
+                try {
+                    $this->_auth->attempt($_POST['username'], $_POST['password']); 
+                    $t->content = $this->_return_message("Success",
+                        "Logged in.");       
+                } catch(\Core\AuthAttemptError $e) {
+                    $t->content = $this->_return_message("Fail",
+                        "Invalid username or password.");
+                }            
+            } else {
+                $t->content = $t->render();
+            }
+            echo $t->render('main.php');
         }
-        echo $t->render('main.php');
     }
 
     public function logout() {
